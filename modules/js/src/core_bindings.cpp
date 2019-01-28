@@ -74,7 +74,7 @@
 
 using namespace emscripten;
 using namespace cv;
-using namespace dnn;
+// using namespace dnn;
 
 namespace binding_utils
 {
@@ -289,24 +289,6 @@ namespace binding_utils
         return circle;
     }
 
-    emscripten::val CamShiftWrapper(const cv::Mat& arg1, Rect& arg2, TermCriteria arg3)
-    {
-        RotatedRect rotatedRect = cv::CamShift(arg1, arg2, arg3);
-        emscripten::val result = emscripten::val::array();
-        result.call<void>("push", rotatedRect);
-        result.call<void>("push", arg2);
-        return result;
-    }
-
-    emscripten::val meanShiftWrapper(const cv::Mat& arg1, Rect& arg2, TermCriteria arg3)
-    {
-        int n = cv::meanShift(arg1, arg2, arg3);
-        emscripten::val result = emscripten::val::array();
-        result.call<void>("push", n);
-        result.call<void>("push", arg2);
-        return result;
-    }
-
     std::string getExceptionMsg(const cv::Exception& e) {
         return e.msg;
     }
@@ -332,6 +314,10 @@ EMSCRIPTEN_BINDINGS(binding_utils)
     register_vector<double>("DoubleVector");
     register_vector<cv::Point>("PointVector");
     register_vector<cv::Mat>("MatVector");
+    register_vector<cv::DMatch>("DMatchVector");
+    register_vector<std::vector<cv::DMatch>>("DMatchVectorVector");
+    register_vector<char>("CharVector");
+    register_vector<std::vector<char>>("CharVectorVector");
     register_vector<cv::Rect>("RectVector");
     register_vector<cv::KeyPoint>("KeyPointVector");
 
@@ -487,6 +473,13 @@ EMSCRIPTEN_BINDINGS(binding_utils)
         .field("response", &cv::KeyPoint::response)
         .field("size", &cv::KeyPoint::size);
 
+    emscripten::value_object<cv::DMatch>("DMatch")
+        .field("queryIdx", &cv::DMatch::queryIdx)
+        .field("trainIdx", &cv::DMatch::trainIdx)
+        .field("imgIdx", &cv::DMatch::imgIdx)
+        .field("distance", &cv::DMatch::distance);
+
+
     emscripten::value_array<cv::Scalar_<double>> ("Scalar")
         .element(index<0>())
         .element(index<1>())
@@ -544,10 +537,6 @@ EMSCRIPTEN_BINDINGS(binding_utils)
     function("morphologyDefaultBorderValue", &cv::morphologyDefaultBorderValue);
 
     function("CV_MAT_DEPTH", &binding_utils::cvMatDepth);
-
-    function("CamShift", select_overload<emscripten::val(const cv::Mat&, Rect&, TermCriteria)>(&binding_utils::CamShiftWrapper));
-
-    function("meanShift", select_overload<emscripten::val(const cv::Mat&, Rect&, TermCriteria)>(&binding_utils::meanShiftWrapper));
 
     function("getBuildInformation", &binding_utils::getBuildInformation);
 

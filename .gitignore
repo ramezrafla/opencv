@@ -22,3 +22,6 @@ bin/
 *.log
 *.tlog
 build
+build_js
+build_wasm
+

@@ -112,7 +112,7 @@ imgproc = {'': ['Canny', 'GaussianBlur', 'Laplacian', 'HoughLines', 'HoughLinesP
                 'goodFeaturesToTrack','grabCut','initUndistortRectifyMap', 'integral','integral2', 'isContourConvex', 'line', \
                 'matchShapes', 'matchTemplate','medianBlur', 'minAreaRect', 'minEnclosingCircle', 'moments', 'morphologyEx', \
                 'pointPolygonTest', 'putText','pyrDown','pyrUp','rectangle','remap', 'resize','sepFilter2D','threshold', \
-                'undistort','warpAffine','warpPerspective','watershed'],
+                'undistort','warpAffine','warpPerspective','watershed','fastNlMeansDenoising','fastNlMeansDenoisingColored'],
            'CLAHE': ['apply', 'collectGarbage', 'getClipLimit', 'getTilesGridSize', 'setClipLimit', 'setTilesGridSize']}
 
 objdetect = {'': ['groupRectangles'],
@@ -163,6 +163,7 @@ photo = {'': ['createAlignMTB', 'createCalibrateDebevec', 'createCalibrateRobert
                              'getColorAdaptation', 'setColorAdaptation']
         }
 
+
 def makeWhiteList(module_list):
     wl = {}
     for m in module_list:
@@ -173,7 +174,7 @@ def makeWhiteList(module_list):
                 wl[k] = m[k]
     return wl
 
-white_list = makeWhiteList([core, imgproc, objdetect, video, dnn, features2d, photo])
+white_list = makeWhiteList([core, imgproc])
 
 # Features to be exported
 export_enums = False
